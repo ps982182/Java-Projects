@@ -6,10 +6,16 @@ public class TravelItineraryPlanner {
     static class Destination {
         private String name;
         private String date;
+        private double budget;
+        private String weatherInfo;
+        private String mapLink;
 
-        public Destination(String name, String date) {
+        public Destination(String name, String date, double budget) {
             this.name = name;
             this.date = date;
+            this.budget = budget;
+            this.weatherInfo = "Sunny"; // Placeholder for weather information
+            this.mapLink = "http://maps.google.com/?q=" + name.replace(" ", "+"); // Placeholder for map link
         }
 
         public String getName() {
@@ -18,6 +24,18 @@ public class TravelItineraryPlanner {
 
         public String getDate() {
             return date;
+        }
+
+        public double getBudget() {
+            return budget;
+        }
+
+        public String getWeatherInfo() {
+            return weatherInfo;
+        }
+
+        public String getMapLink() {
+            return mapLink;
         }
     }
 
@@ -32,7 +50,11 @@ public class TravelItineraryPlanner {
         }
 
         public void addDestination(Destination destination) {
-            destinations[currentIndex++] = destination;
+            if (currentIndex < destinations.length) {
+                destinations[currentIndex++] = destination;
+            } else {
+                System.out.println("Cannot add more destinations. Planner is full.");
+            }
         }
 
         public int getSize() {
@@ -41,6 +63,14 @@ public class TravelItineraryPlanner {
 
         public Destination getDestination(int index) {
             return destinations[index];
+        }
+
+        public double getTotalBudget() {
+            double total = 0;
+            for (int i = 0; i < currentIndex; i++) {
+                total += destinations[i].getBudget();
+            }
+            return total;
         }
     }
 
@@ -68,8 +98,11 @@ public class TravelItineraryPlanner {
             System.out.print("Date: ");
             String date = scanner.nextLine();
 
+            System.out.print("Budget: ");
+            double budget = Double.parseDouble(scanner.nextLine());
+
             // Create a new destination object and add it to the planner
-            Destination destination = new Destination(name, date);
+            Destination destination = new Destination(name, date, budget);
             planner.addDestination(destination);
 
             System.out.println("Destination added successfully!\n");
@@ -81,9 +114,14 @@ public class TravelItineraryPlanner {
         for (int i = 0; i < numDestinations; i++) {
             Destination destination = planner.getDestination(i);
             System.out.println("Destination " + (i + 1) + ": " + destination.getName() + " (" + destination.getDate() + ")");
+            System.out.println("   Budget: $" + destination.getBudget());
+            System.out.println("   Weather Info: " + destination.getWeatherInfo());
+            System.out.println("   Map Link: " + destination.getMapLink());
         }
+
+        // Display total budget
+        System.out.println("\nTotal Budget: $" + planner.getTotalBudget());
 
         scanner.close();
     }
 }
-
